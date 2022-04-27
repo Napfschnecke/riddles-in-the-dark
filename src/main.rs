@@ -1,6 +1,12 @@
 extern crate base64;
+
+use colored::Colorize;
+
 static RIDDLE_FILE: &'static str = include_str!("../riddles.txt");
 static SOLUTION_FILE: &'static str = include_str!("../solutions.txt");
+const CORRECT: &str = "Das ist die richtige Antwort! 🙂";
+const INCORRECT: &str = "ist nicht die richtige Antwort 🤔";
+
 fn main() {
     use std::io::{stdin,stdout,Write};
     let riddles = read_riddles();
@@ -23,11 +29,15 @@ fn main() {
             s.pop();
         }
         if solutions[counter] == s {
-            println!("{} ist die richtige Antwort!",s);
             counter = counter + 1;
-            print_riddle = true;
+            if counter == riddles.len() {
+                print_final();
+            } else {
+                println!("\n{}\n", CORRECT.bright_green());
+                print_riddle = true;
+            }
         } else {
-            println!("{} ist nicht die richtige Antwort...",s);
+            println!("\n{} {}\n", s.bright_magenta().bold(), INCORRECT.bright_red());
             print_riddle = false;
         }
     }
@@ -43,8 +53,19 @@ fn read_solutions() -> Vec<String> {
 
 fn transform_riddle(counter: usize, riddle: &String) {
     match counter {
-        1 => print!("{} ....... huch. Was ist denn hier basiert?\t", base64::encode(riddle)),
-        19 => print!("{}\t", riddle.chars().rev().collect::<String>()),
-        _ => print!("{}\t", riddle),
+        1 => println!("{} ....... huch. Was ist denn hier basiert?", base64::encode(riddle)),
+        19 => println!("{}", riddle.chars().rev().collect::<String>()),
+        _ => println!("{}", riddle),
     }
+}
+
+fn print_final() {
+    let final_riddle = " Fips und Alica sitzen aufm Baum ";
+    let top = (0..final_riddle.len() + 6).map(|_| "#").collect::<String>().bright_green();
+    let side = "###".bright_green();
+    println!("\n\n{}", top);
+    println!("{}", top);
+    println!("{}{}{}", side, final_riddle.bright_yellow().bold(), side);
+    println!("{}", top);
+    println!("{}\n\n", top);
 }
