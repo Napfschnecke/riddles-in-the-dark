@@ -4,6 +4,9 @@ use colored::Colorize;
 
 static RIDDLE_FILE: &'static str = include_str!("../riddles.txt");
 static SOLUTION_FILE: &'static str = include_str!("../solutions.txt");
+static TITLE_ART: &'static str = include_str!("../title.txt");
+static CONGRATS_ART: &'static str = include_str!("../congrats.txt");
+
 const CORRECT: &str = "Das ist die richtige Antwort! 🙂";
 const INCORRECT: &str = "ist nicht die richtige Antwort 🤔";
 
@@ -13,6 +16,8 @@ fn main() {
     let solutions = read_solutions();
     let mut counter = 0;
     let mut print_riddle = true;
+
+    println!("{}", TITLE_ART.bright_red());
 
     while counter < riddles.len() {
         let current_riddle = &riddles[counter];
@@ -53,16 +58,17 @@ fn read_solutions() -> Vec<String> {
 
 fn transform_riddle(counter: usize, riddle: &String) {
     match counter {
-        1 => println!("{} ....... huch. Was ist denn hier basiert?", base64::encode(riddle)),
-        19 => println!("{}", riddle.chars().rev().collect::<String>()),
-        _ => println!("{}", riddle),
+        1 => println!("{} ....... huch. Was ist denn hier basiert?", base64::encode(riddle).bright_yellow()),
+        19 => println!("{}", riddle.chars().rev().collect::<String>().bright_yellow()),
+        _ => println!("{}", riddle.bright_yellow()),
     }
 }
 
 fn print_final() {
+    println!("{}", CONGRATS_ART.bright_green());
     let final_riddle = " Fips und Alica sitzen aufm Baum ";
-    let top = (0..final_riddle.len() + 6).map(|_| "#").collect::<String>().bright_green();
-    let side = "###".bright_green();
+    let top = (0..final_riddle.len() + 12).map(|_| "#").collect::<String>().bright_green();
+    let side = "######".bright_green();
     println!("\n\n{}", top);
     println!("{}", top);
     println!("{}{}{}", side, final_riddle.bright_yellow().bold(), side);
