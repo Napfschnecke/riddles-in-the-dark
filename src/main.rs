@@ -1,6 +1,6 @@
 extern crate base64;
 
-use colored::Colorize;
+use colored::*;
 
 static RIDDLE_FILE: &'static str = include_str!("../riddles.txt");
 static SOLUTION_FILE: &'static str = include_str!("../solutions.txt");
@@ -12,6 +12,8 @@ const INCORRECT: &str = "ist nicht die richtige Antwort 🤔";
 
 fn main() {
     use std::io::{stdin,stdout,Write};
+    control::set_virtual_terminal(true).unwrap();
+
     let riddles = read_riddles();
     let solutions = read_solutions();
     let mut counter = 0;
@@ -23,7 +25,7 @@ fn main() {
         let current_riddle = &riddles[counter];
         let mut s=String::new();
 
-        if print_riddle { transform_riddle(counter, current_riddle) };
+        if print_riddle { transform_riddle(counter, current_riddle, riddles.len()) };
 
         let _ = stdout().flush();
         stdin().read_line(&mut s).expect("Did not enter a correct string");
@@ -56,11 +58,11 @@ fn read_solutions() -> Vec<String> {
     SOLUTION_FILE.lines().map(|line| line.to_string()).collect()
 }
 
-fn transform_riddle(counter: usize, riddle: &String) {
+fn transform_riddle(counter: usize, riddle: &String, num_riddles: usize) {
     match counter {
-        1 => println!("{} ....... huch. Was ist denn hier basiert?", base64::encode(riddle).bright_yellow()),
-        19 => println!("{}", riddle.chars().rev().collect::<String>().bright_yellow()),
-        _ => println!("{}", riddle.bright_yellow()),
+        1 => println!("{}|{}: {} ....... huch. Was ist denn hier basiert?", counter + 1, num_riddles, base64::encode(riddle).bright_yellow()),
+        19 => println!("{}|{}: {}", counter + 1, num_riddles, riddle.chars().rev().collect::<String>().bright_yellow()),
+        _ => println!("{}|{}: {}", counter + 1, num_riddles, riddle.bright_yellow()),
     }
 }
 
