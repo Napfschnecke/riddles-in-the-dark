@@ -1,6 +1,11 @@
 extern crate base64;
 
 use colored::*;
+use std::{
+    io::{stdout, Write},
+    thread::sleep,
+    time::Duration,
+};
 
 static RIDDLE_FILE: &'static str = include_str!("../riddles.txt");
 static SOLUTION_FILE: &'static str = include_str!("../solutions.txt");
@@ -28,7 +33,7 @@ fn main() {
         if print_riddle { transform_riddle(counter, current_riddle, riddles.len()) };
 
         let _ = stdout().flush();
-        stdin().read_line(&mut s).expect("Did not enter a correct string");
+        stdin().read_line(&mut s).expect("Was hast du denn eingegeben?");
         if let Some('\n')=s.chars().next_back() {
             s.pop();
         }
@@ -48,6 +53,8 @@ fn main() {
             print_riddle = false;
         }
     }
+    let mut exit=String::new();
+    stdin().read_line(&mut exit);
 }
 
 fn read_riddles() -> Vec<String>{
@@ -59,17 +66,30 @@ fn read_solutions() -> Vec<String> {
 }
 
 fn transform_riddle(counter: usize, riddle: &String, num_riddles: usize) {
+
+    let mut stdout = stdout();
+    let mut output=String::new();
+
+    for i in 0..riddle.len() {
+        output.push(riddle.as_bytes()[i] as char);
+        print!("\r{}", output.bright_yellow());
+        stdout.flush().unwrap();
+        sleep(Duration::from_millis(20));
+    }
+    println!();
+    /*
     match counter {
         1 => println!("{}|{}: {} ....... huch. Was ist denn hier basiert?", counter + 1, num_riddles, base64::encode(riddle).bright_yellow()),
         19 => println!("{}|{}: {}", counter + 1, num_riddles, riddle.chars().rev().collect::<String>().bright_yellow()),
         _ => println!("{}|{}: {}", counter + 1, num_riddles, riddle.bright_yellow()),
     }
+    */
 }
 
 fn print_final() {
     println!("{}", CONGRATS_ART.bright_green());
-    let final_riddle = " Fips und Alica sitzen aufm Baum ";
-    let top = (0..final_riddle.len() + 12).map(|_| "#").collect::<String>().bright_green();
+    let final_riddle = " Uff. So viele lose Textfiles..äh Blätter..in meinem Ordner. ";
+    let top = (0..final_riddle.len() + 14).map(|_| "#").collect::<String>().bright_green();
     let side = "######".bright_green();
     println!("\n\n{}", top);
     println!("{}", top);
