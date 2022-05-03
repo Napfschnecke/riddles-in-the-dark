@@ -2,7 +2,7 @@ extern crate base64;
 
 use colored::*;
 use std::{
-    io::{stdout, Write},
+    io::{stdin, stdout, Write},
     thread::sleep,
     time::Duration,
 };
@@ -16,8 +16,7 @@ const CORRECT: &str = "Das ist die richtige Antwort! 🙂";
 const INCORRECT: &str = "ist nicht die richtige Antwort 🤔";
 
 fn main() {
-    use std::io::{stdin,stdout,Write};
-    control::set_virtual_terminal(true).unwrap();
+    // control::set_virtual_terminal(true).unwrap();
 
     let riddles = read_riddles();
     let solutions = read_solutions();
@@ -90,7 +89,7 @@ fn print_final() {
     println!("{}", CONGRATS_ART.bright_green());
     let final_riddle = " Uff. So viele lose Textfiles..äh Blätter..in meinem Ordner. ";
     let top = (0..final_riddle.len() + 14).map(|_| "#").collect::<String>().bright_green();
-    let side = "######".bright_green();
+    let side = "########".bright_green();
     println!("\n\n{}", top);
     println!("{}", top);
     println!("{}{}{}", side, final_riddle.bright_yellow().bold(), side);
